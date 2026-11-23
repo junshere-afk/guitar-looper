@@ -31,13 +31,13 @@
       </div>
       <div class="ab-times"><div><b>A</b> <span id="aTime">--:--.-</span></div><div><b>B</b> <span id="bTime">--:--.-</span></div></div>
       <div class="adjust-grid" aria-label="AB 구간 미세 조정"><button data-adjust="a:-0.1" type="button">A −0.1초</button><button data-adjust="a:0.1" type="button">A +0.1초</button><button data-adjust="b:-0.1" type="button">B −0.1초</button><button data-adjust="b:0.1" type="button">B +0.1초</button></div>
-      <p class="keys">단축키: <kbd>[</kbd> A 지정 · <kbd>]</kbd> B 지정/반복 · <kbd>\</kbd> 자유재생 · <kbd>←</kbd>/<kbd>→</kbd> 5초 이동 · <kbd>Backspace</kbd> A로 이동 · <kbd>X</kbd>/<kbd>C</kbd> 속도 −/+0.05× · <kbd>Z</kbd> 1.00×</p>
+      <p class="keys">단축키: <kbd>[</kbd> A 지정 · <kbd>]</kbd> B 지정/반복 · <kbd>\</kbd> 자유재생 · <kbd>←</kbd>/<kbd>→</kbd> 5초 이동 · <kbd>Backspace</kbd> A로 이동 · <kbd>X</kbd>/<kbd>C</kbd> 속도 −/+0.05× · <kbd>Z</kbd> 1.00× · <kbd>M</kbd> 인덱스 저장 · <kbd>1</kbd>~<kbd>0</kbd> 인덱스 이동 · <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Z</kbd> 인덱스 추가 취소</p>
     </section>
 
-    <section class="segments-card">
-      <div class="section-head"><div><h2>저장된 AB 구간</h2><p id="segmentMeta">현재 영상의 구간을 불러오는 중입니다.</p></div><div class="backup-actions"><button id="exportBtn" type="button">JSON 내보내기</button><button id="importBtn" type="button">JSON 가져오기</button><input id="importFile" type="file" accept="application/json,.json" hidden></div></div>
-      <div class="save-form"><label for="segmentName">구간 이름</label><input id="segmentName" maxlength="80" placeholder="예: 인트로 리프"><button id="saveBtn" class="primary" type="button">구간 저장</button><button id="updateBtn" type="button" disabled>선택 구간 업데이트</button><button id="deleteBtn" class="danger" type="button" disabled>선택 구간 삭제</button></div>
-      <div id="segmentList" class="segment-list" aria-live="polite"></div>
+    <section class="index-card" aria-label="영상 인덱스">
+      <strong>인덱스</strong>
+      <div id="indexList" class="index-list" aria-label="저장된 영상 인덱스" aria-live="polite"></div>
+      <div class="index-actions"><button id="addIndexBtn" class="primary" type="button" aria-label="현재 위치를 인덱스로 저장">+</button><button id="deleteIndexBtn" class="danger" type="button" disabled>삭제</button></div>
     </section>
   </main>
   <script src="https://www.youtube.com/iframe_api"></script>
