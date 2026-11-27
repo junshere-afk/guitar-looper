@@ -7,15 +7,16 @@
   <title>Guitar Looper</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="recorder.css">
-  <link rel="stylesheet" href="layout.css?v=2">
+  <link rel="stylesheet" href="layout.css?v=3">
+  <link rel="stylesheet" href="compact.css?v=1">
   <style>.fullscreen-badge,.fullscreen-notice{display:none;pointer-events:none;position:absolute;z-index:5;color:#fff;background:#0009;border-radius:8px}.player-card:fullscreen{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#000}.player-card:fullscreen .video-title,.player-card:fullscreen .mode-row,.player-card:fullscreen .transport,.player-card:fullscreen .ab-times,.player-card:fullscreen .adjust-grid,.player-card:fullscreen .keys,.player-card:fullscreen #keyboardFocus{display:none}.player-card:fullscreen .player-wrap{width:100%;height:100%;aspect-ratio:auto;border-radius:0}.player-card:fullscreen .fullscreen-badge{display:block;right:16px;top:16px;padding:6px 9px;font-size:14px}.player-card:fullscreen .fullscreen-notice:not([hidden]){display:block;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 22px;font-size:32px}</style>
   <style>.recent-wrap{position:relative}.recent-menu{position:absolute;z-index:4;top:calc(100% + 8px);right:0;width:min(440px,calc(100vw - 48px));max-height:320px;overflow:auto;padding:8px;border:1px solid #38537c;border-radius:10px;background:#101a2d;box-shadow:0 14px 30px #0008}.recent-item{display:flex;gap:7px;align-items:center}.recent-select{flex:1;min-width:0;text-align:left}.recent-title,.recent-meta{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.recent-meta{margin-top:3px;color:#a9c0df;font-size:12px}.recent-delete{min-height:36px;padding:6px 10px}.recent-empty{padding:12px;color:#a9c0df;font-size:13px;text-align:center}</style>
 </head>
 <body>
   <main class="app" id="appShell" tabindex="-1">
     <header class="topbar">
-      <div class="heading-group"><div><h1>Guitar Looper</h1><p>유튜브 기타 카피를 위한 자유 AB 반복</p></div>
-      <nav class="mode-tabs" aria-label="모드"><button id="copyTab" type="button" aria-pressed="true"><span aria-hidden="true">🎸</span> 카피 모드</button><button id="recordTab" type="button" aria-pressed="false"><span aria-hidden="true">🎙</span> 녹음 &amp; 모니터</button></nav></div><button id="fullscreenBtn" type="button">전체화면</button>
+      <div class="heading-group"><div><h1>Guitar Looper</h1></div>
+      <nav class="mode-tabs" aria-label="모드"><button id="copyTab" type="button" aria-pressed="true"><span aria-hidden="true">🎸</span> 카피 모드</button><button id="recordTab" type="button" aria-pressed="false"><span aria-hidden="true">🎙</span> 녹음 &amp; 모니터</button></nav></div><div class="header-actions"><div class="shortcuts-wrap"><button id="shortcutsBtn" type="button" aria-expanded="false" aria-controls="shortcutsMenu">⌨ 단축키</button><div id="shortcutsMenu" class="shortcuts-menu" hidden><div class="shortcuts-head"><strong>단축키</strong><button id="shortcutsClose" type="button" aria-label="단축키 닫기">×</button></div><p>[ / ] A·B 지정 · Shift+] B 취소 · \ 자유재생</p><p>O / P A −/+0.1초 · ← / → 5초 이동 · Backspace A 이동</p><p>↑ / ↓ 볼륨 · X / C 속도 · Z 속도 초기화</p><p>M 인덱스 저장 · 1~0 인덱스 이동 · Ctrl/⌘+Z 추가 취소</p><p>R 녹음 시작/정지 · T 마지막 녹음 재생/정지</p><p>Enter 전체화면 전환 · Esc 전체화면 종료</p></div></div><button id="fullscreenBtn" type="button">전체화면</button></div>
     </header>
 
     <section class="load-card" aria-label="영상 불러오기">
@@ -27,14 +28,12 @@
     <section class="player-card" id="playerCard" tabindex="-1">
       <div class="video-title"><span id="playerStatus">YouTube API 연결 대기 중</span><span id="volumeStatus" aria-live="polite" hidden></span></div>
       <div class="player-wrap" id="playerWrap"><div id="player"></div><button id="keyboardFocus" type="button" title="영상 클릭 후 단축키가 안 되면 누르세요">키보드 제어</button><div id="fullscreenBadge" class="fullscreen-badge" aria-hidden="true"><span id="fullscreenRate">1.00×</span> <span id="fullscreenAb" hidden>AB</span> <span id="recordOsd" hidden></span></div><div id="fullscreenNotice" class="fullscreen-notice" aria-hidden="true" hidden></div></div>
-      <div class="mode-row"><span id="modeStatus" class="mode">자유 재생</span><span id="abStatus">[ 키로 A 지점을 지정하세요.</span></div>
+      <div class="mode-row"><span id="modeStatus" hidden></span><span id="abStatus" role="status"></span></div>
       <div class="transport">
         <button id="playBtn" class="primary" type="button">재생</button><button id="freeBtn" type="button">자유재생</button><button id="backBtn" type="button">A로 이동</button>
-        <label>속도 <select id="speed"><option value="0.50">0.50×</option><option value="0.55">0.55×</option><option value="0.60">0.60×</option><option value="0.65">0.65×</option><option value="0.70">0.70×</option><option value="0.75">0.75×</option><option value="0.80">0.80×</option><option value="0.85">0.85×</option><option value="0.90">0.90×</option><option value="0.95">0.95×</option><option value="1.00" selected>1.00×</option><option value="1.05">1.05×</option><option value="1.10">1.10×</option><option value="1.15">1.15×</option><option value="1.20">1.20×</option><option value="1.25">1.25×</option><option value="1.30">1.30×</option><option value="1.35">1.35×</option><option value="1.40">1.40×</option><option value="1.45">1.45×</option><option value="1.50">1.50×</option></select><span id="speedApplied" aria-live="polite">적용 속도 1.00×</span></label>
+        <label>속도 <select id="speed"><option value="0.50">0.50×</option><option value="0.55">0.55×</option><option value="0.60">0.60×</option><option value="0.65">0.65×</option><option value="0.70">0.70×</option><option value="0.75">0.75×</option><option value="0.80">0.80×</option><option value="0.85">0.85×</option><option value="0.90">0.90×</option><option value="0.95">0.95×</option><option value="1.00" selected>1.00×</option><option value="1.05">1.05×</option><option value="1.10">1.10×</option><option value="1.15">1.15×</option><option value="1.20">1.20×</option><option value="1.25">1.25×</option><option value="1.30">1.30×</option><option value="1.35">1.35×</option><option value="1.40">1.40×</option><option value="1.45">1.45×</option><option value="1.50">1.50×</option></select><span id="speedApplied" aria-live="polite" hidden></span></label>
+        <div class="ab-times"><div><b>A</b> <span id="aTime">--:--.-</span></div><div><b>B</b> <span id="bTime">--:--.-</span><button data-adjust="b:-0.1" type="button" aria-label="B 0.1초 앞당기기">−</button><button data-adjust="b:0.1" type="button" aria-label="B 0.1초 늦추기">+</button></div></div>
       </div>
-      <div class="ab-times"><div><b>A</b> <span id="aTime">--:--.-</span></div><div><b>B</b> <span id="bTime">--:--.-</span></div></div>
-      <div class="adjust-grid" aria-label="AB 구간 미세 조정"><button data-adjust="a:-0.1" type="button">A −0.1초</button><button data-adjust="a:0.1" type="button">A +0.1초</button><button data-adjust="b:-0.1" type="button">B −0.1초</button><button data-adjust="b:0.1" type="button">B +0.1초</button></div>
-      <p class="keys">단축키: <kbd>[</kbd> A 지정 · <kbd>]</kbd> B 지정/반복 · <kbd>\</kbd> 자유재생 · <kbd>←</kbd>/<kbd>→</kbd> 5초 이동 · <kbd>Backspace</kbd> A로 이동 · <kbd>X</kbd>/<kbd>C</kbd> 속도 −/+0.05× · <kbd>Z</kbd> 1.00× · <kbd>M</kbd> 인덱스 저장 · <kbd>1</kbd>~<kbd>0</kbd> 인덱스 이동 · <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Z</kbd> 인덱스 추가 취소</p>
     </section>
 
     <section class="index-card" aria-label="영상 인덱스">
@@ -45,19 +44,18 @@
     <section id="recordPanel" class="record-panel" hidden>
       <header class="record-header"><strong>녹음</strong><div><span id="recStatus" role="status">입력 연결 안 됨</span> <button id="recSettingsToggle" type="button" aria-expanded="false" aria-controls="recSettings" aria-label="녹음 설정">⚙</button></div></header>
       <div id="recSettings" class="record-settings" hidden>
-        <div class="settings-common"><button id="recPermission" type="button">마이크 권한 요청 · 장치 새로고침</button></div>
-        <div class="settings-input"><h3>메인 입력</h3><label>입력 장치<select id="recMain"></select></label><label>게인 <output id="recMainDb">0 dB</output><input id="recMainGain" type="range" min="-24" max="24" value="0"></label></div>
-        <div class="settings-input"><h3>마이크 입력</h3><label><input id="recMicEnabled" type="checkbox"> 마이크 입력 사용</label><label>입력 장치<select id="recMic"></select></label><label>채널<select id="recChannel"><option value="0">채널 1</option><option value="1">채널 2</option></select></label><label>게인 <output id="recMicDb">0 dB</output><input id="recMicGain" type="range" min="-24" max="24" value="0"></label></div>
-        <div class="settings-fx"><div class="fx-head"><h3>Microphone FX</h3><label><input id="recFxEnabled" type="checkbox"> FX 사용</label><button id="recFxReset" type="button">초기화</button></div><div class="fx-grid"><label>Reverb <output id="recReverbOut">0%</output><input id="recReverb" type="range" min="0" max="100" value="0"></label><label>Compressor <output id="recCompOut">0%</output><input id="recComp" type="range" min="0" max="100" value="0"></label><label>Low <output id="recLowOut">0 dB</output><input id="recLow" type="range" min="-12" max="12" value="0"></label><label>Mid <output id="recMidOut">0 dB</output><input id="recMid" type="range" min="-12" max="12" value="0"></label><label>High <output id="recHighOut">0 dB</output><input id="recHigh" type="range" min="-12" max="12" value="0"></label></div></div>
-        <button id="recConnect" type="button">입력 연결 / 재연결</button>
+        <div class="settings-common"><button id="recPermission" type="button">마이크 권한 요청 · 장치 새로고침</button><button id="recConnect" type="button">입력 연결 / 재연결</button></div>
+        <div class="settings-input main-input"><h3>메인 입력 <small>스테레오</small></h3><label>입력 장치<select id="recMain"></select></label><label class="slider-line"><span>게인</span><input id="recMainGain" type="range" min="-24" max="24" value="0"><output id="recMainDb">0 dB</output></label></div>
+        <div class="settings-input mic-input"><h3>마이크 입력</h3><label><input id="recMicEnabled" type="checkbox"> 마이크 입력 사용</label><label>입력 장치<select id="recMic"></select></label><label>채널<select id="recChannel"><option value="0">채널 1</option><option value="1">채널 2</option></select></label><label class="slider-line"><span>게인</span><input id="recMicGain" type="range" min="-24" max="24" value="0"><output id="recMicDb">0 dB</output></label></div>
+        <div class="settings-fx"><div class="fx-head"><h3>Microphone FX</h3><label><input id="recFxEnabled" type="checkbox"> FX 사용</label><button id="recFxReset" type="button">초기화</button></div><div class="fx-grid"><label class="slider-line"><span>Reverb</span><input id="recReverb" type="range" min="0" max="100" value="0"><output id="recReverbOut">0%</output></label><label class="slider-line"><span>Comp</span><input id="recComp" type="range" min="0" max="100" value="0"><output id="recCompOut">0%</output></label><label class="slider-line"><span>Low</span><input id="recLow" type="range" min="-12" max="12" value="0"><output id="recLowOut">0 dB</output></label><label class="slider-line"><span>Mid</span><input id="recMid" type="range" min="-12" max="12" value="0"><output id="recMidOut">0 dB</output></label><label class="slider-line"><span>High</span><input id="recHigh" type="range" min="-12" max="12" value="0"><output id="recHighOut">0 dB</output></label></div></div>
       </div>
       <div class="record-meters"><div><span>기타 / 반주 <small id="recMainLabel">0 dB</small></span><div class="meter-track"><div id="recMainMeter"></div></div></div><div><span>마이크 <small id="recMicLabel">0 dB</small></span><div class="meter-track"><div id="recMicMeter"></div></div></div><div><span>최종 믹스 <small id="recPeak">−∞ dBFS</small></span><div class="meter-track"><div id="recMixMeter"></div></div></div></div>
       <div class="record-controls"><button id="recStart" type="button" aria-label="녹음 시작">●</button><button id="recStop" type="button" disabled>정지</button><button id="recLast" type="button">마지막 녹음 재생</button><time id="recElapsed">00:00</time></div>
-      <div class="record-takes"><strong>최근 녹음</strong><div id="recList"></div></div>
+      <div class="record-takes" id="recTakes" hidden><strong>최근 녹음</strong><div id="recList"></div></div>
     </section>
   </main>
   <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="app.js?v=2"></script>
-  <script src="recorder.js?v=2"></script>
+  <script src="app.js?v=3"></script>
+  <script src="recorder.js?v=3"></script>
 </body>
 </html>
