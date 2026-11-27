@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="recorder.css">
   <link rel="stylesheet" href="layout.css?v=3">
   <link rel="stylesheet" href="compact.css?v=1">
+  <style>.load-summary #videoSize{margin-left:auto}.recording-mode.small-video .player-card:not(:fullscreen) .player-wrap{width:min(100%,426.67px);margin-inline:auto}.record-controls label,.settings-common label{font-size:13px;white-space:nowrap}.settings-common{align-items:center;flex-wrap:wrap}</style>
   <style>@media (min-width:721px) and (hover:hover) and (pointer:fine){#freeBtn,#backBtn{display:none}}</style>
   <style>.ab-times div{display:flex;align-items:center;gap:4px}.ab-times b{margin:0}.ab-times button{margin:0}</style>
   <style>.fullscreen-badge,.fullscreen-notice{display:none;pointer-events:none;position:absolute;z-index:5;color:#fff;background:#0009;border-radius:8px}.player-card:fullscreen{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#000}.player-card:fullscreen .video-title,.player-card:fullscreen .mode-row,.player-card:fullscreen .transport,.player-card:fullscreen .ab-times,.player-card:fullscreen .adjust-grid,.player-card:fullscreen .keys,.player-card:fullscreen #keyboardFocus{display:none}.player-card:fullscreen .player-wrap{width:100%;height:100%;aspect-ratio:auto;border-radius:0}.player-card:fullscreen .fullscreen-badge{display:block;right:16px;top:16px;padding:6px 9px;font-size:14px}.player-card:fullscreen .fullscreen-notice:not([hidden]){display:block;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 22px;font-size:32px}</style>
@@ -22,7 +23,7 @@
     </header>
 
     <section class="load-card" aria-label="영상 불러오기">
-      <div class="load-summary"><strong id="videoTitle">영상 준비 중</strong><button id="loadToggle" type="button" aria-expanded="true" aria-controls="loadDetails">영상 변경</button></div><div id="loadDetails"><label for="videoUrl">YouTube URL</label>
+      <div class="load-summary"><strong id="videoTitle">영상 준비 중</strong><button id="videoSize" type="button" hidden aria-pressed="false">영상 축소</button><button id="loadToggle" type="button" aria-expanded="true" aria-controls="loadDetails">영상 변경</button></div><div id="loadDetails"><label for="videoUrl">YouTube URL</label>
       <div class="url-row"><input id="videoUrl" autocomplete="url" spellcheck="false" value="https://www.youtube.com/watch?v=8-Li_sFNc4Q" placeholder="YouTube 영상 URL"><button id="loadBtn" class="primary" type="button">영상 불러오기</button><div class="recent-wrap"><button id="recentBtn" type="button" aria-expanded="false">최근 영상</button><div id="recentMenu" class="recent-menu" hidden></div></div></div>
       <p class="hint" id="loadStatus">일반 YouTube URL과 youtu.be 단축 URL을 지원합니다.</p></div>
     </section>
@@ -46,18 +47,18 @@
     <section id="recordPanel" class="record-panel" hidden>
       <header class="record-header"><strong>녹음</strong><div><span id="recStatus" role="status">입력 연결 안 됨</span> <button id="recSettingsToggle" type="button" aria-expanded="false" aria-controls="recSettings" aria-label="녹음 설정">⚙</button></div></header>
       <div id="recSettings" class="record-settings" hidden>
-        <div class="settings-common"><button id="recPermission" type="button">마이크 권한 요청 · 장치 새로고침</button><button id="recConnect" type="button">입력 연결 / 재연결</button></div>
+        <div class="settings-common"><label><input id="shareVideo" type="checkbox"> 카피 모드와 영상 공유</label><button id="recPermission" type="button">마이크 권한 요청 · 장치 새로고침</button><button id="recConnect" type="button">입력 연결 / 재연결</button></div>
         <div class="settings-input main-input"><h3>메인 입력 <small>스테레오</small></h3><label>입력 장치<select id="recMain"></select></label><label class="slider-line"><span>게인</span><input id="recMainGain" type="range" min="-24" max="24" value="0"><output id="recMainDb">0 dB</output></label></div>
         <div class="settings-input mic-input"><h3>마이크 입력</h3><label><input id="recMicEnabled" type="checkbox"> 마이크 입력 사용</label><label>입력 장치<select id="recMic"></select></label><label>채널<select id="recChannel"><option value="0">채널 1</option><option value="1">채널 2</option></select></label><label class="slider-line"><span>게인</span><input id="recMicGain" type="range" min="-24" max="24" value="0"><output id="recMicDb">0 dB</output></label></div>
         <div class="settings-fx"><div class="fx-head"><h3>Microphone FX</h3><label><input id="recFxEnabled" type="checkbox"> FX 사용</label><button id="recFxReset" type="button">초기화</button></div><div class="fx-grid"><label class="slider-line"><span>Reverb</span><input id="recReverb" type="range" min="0" max="100" value="0"><output id="recReverbOut">0%</output></label><label class="slider-line"><span>Comp</span><input id="recComp" type="range" min="0" max="100" value="0"><output id="recCompOut">0%</output></label><label class="slider-line"><span>Low</span><input id="recLow" type="range" min="-12" max="12" value="0"><output id="recLowOut">0 dB</output></label><label class="slider-line"><span>Mid</span><input id="recMid" type="range" min="-12" max="12" value="0"><output id="recMidOut">0 dB</output></label><label class="slider-line"><span>High</span><input id="recHigh" type="range" min="-12" max="12" value="0"><output id="recHighOut">0 dB</output></label></div></div>
       </div>
       <div class="record-meters"><div><span>기타 / 반주 <small id="recMainLabel">0 dB</small></span><div class="meter-track"><div id="recMainMeter"></div></div></div><div><span>마이크 <small id="recMicLabel">0 dB</small></span><div class="meter-track"><div id="recMicMeter"></div></div></div><div><span>최종 믹스 <small id="recPeak">−∞ dBFS</small></span><div class="meter-track"><div id="recMixMeter"></div></div></div></div>
-      <div class="record-controls"><button id="recStart" type="button" aria-label="녹음 시작">●</button><button id="recStop" type="button" disabled>정지</button><button id="recLast" type="button">마지막 녹음 재생</button><time id="recElapsed">00:00</time></div>
+      <div class="record-controls"><button id="recStart" type="button" aria-label="녹음 시작">●</button><button id="recStop" type="button" disabled>정지</button><button id="recLast" type="button">마지막 녹음 재생</button><time id="recElapsed">00:00</time><label><input id="recordAutoplay" type="checkbox"> 녹음 시 자동 재생</label></div>
       <div class="record-takes" id="recTakes" hidden><strong>최근 녹음</strong><div id="recList"></div></div>
     </section>
   </main>
   <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="app.js?v=5"></script>
-  <script src="recorder.js?v=3"></script>
+  <script src="app.js?v=6"></script>
+  <script src="recorder.js?v=4"></script>
 </body>
 </html>
