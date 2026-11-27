@@ -8,6 +8,7 @@ let ctx=null,streams=[],dest=null,nodes={},recorder=null,chunks=[],started=0,tim
 const ids={main:'recMain',mic:'recMic',micEnabled:'recMicEnabled',channel:'recChannel',mainGain:'recMainGain',micGain:'recMicGain',fx:'recFxEnabled',reverb:'recReverb',comp:'recComp',low:'recLow',mid:'recMid',high:'recHigh'};
 const status=s=>{el('recStatus').textContent=s;el('recStatus').className=s==='입력 연결됨'?'status-connected':s==='녹음 중'?'status-recording':'status-notice'};
 const isRecording=()=>recorder?.state==='recording'||finishing;
+window.isLooperRecording=()=>isRecording();
 const time=s=>{s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
 const smooth=(p,v)=>{if(ctx)p.setTargetAtTime(v,ctx.currentTime,.02)};
 const dbGain=v=>10**(Number(v)/20);
@@ -17,7 +18,7 @@ function applyFx(){if(!ctx||!nodes.main)return;smooth(nodes.main.gain,dbGain(set
 for(const [key,id] of Object.entries(ids)){const control=el(id);control.addEventListener('change',()=>{settings[key]=control.type==='checkbox'?control.checked:control.type==='range'?Number(control.value):control.value;saveSettings();refreshValues();applyFx();if(['main','mic','channel'].includes(key)||key==='micEnabled'&&settings.micEnabled&&!streams[1])status('입력 설정을 적용하려면 재연결하세요.')});if(control.type==='range')control.addEventListener('input',()=>{settings[key]=Number(control.value);saveSettings();refreshValues();applyFx()})}
 el('recFxReset').onclick=()=>{Object.assign(settings,{fx:false,reverb:0,comp:0,low:0,mid:0,high:0});saveSettings();refreshValues();applyFx()};
 el('copyTab').onclick=()=>setMode(false);el('recordTab').onclick=()=>setMode(true);
-function setMode(show){if(!switchVideoMode(show?'record':'copy',isRecording()))return;el('recordPanel').hidden=!show;el('videoSize').hidden=!show;el('appShell').classList.toggle('recording-mode',show);el('copyTab').setAttribute('aria-pressed',String(!show));el('recordTab').setAttribute('aria-pressed',String(show))}
+function setMode(show){if(!switchVideoMode(show?'record':'copy',isRecording()))return;el('recordPanel').hidden=!show;el('videoSize').hidden=!show||sourceKind==='local';el('appShell').classList.toggle('recording-mode',show);el('copyTab').setAttribute('aria-pressed',String(!show));el('recordTab').setAttribute('aria-pressed',String(show))}
 try{el('recordAutoplay').checked=localStorage.getItem('guitar-looper-record-autoplay')==='true'}catch{}
 el('recordAutoplay').onchange=()=>{try{localStorage.setItem('guitar-looper-record-autoplay',String(el('recordAutoplay').checked))}catch{}};
 el('recSettingsToggle').onclick=()=>{const panel=el('recSettings');panel.hidden=!panel.hidden;el('recSettingsToggle').setAttribute('aria-expanded',String(!panel.hidden))};

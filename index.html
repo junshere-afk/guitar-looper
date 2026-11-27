@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="recorder.css">
   <link rel="stylesheet" href="layout.css?v=3">
   <link rel="stylesheet" href="compact.css?v=1">
+  <style>#localPlayer{min-height:110px;padding:12px;border-radius:10px;background:#091426}#localPlayer[hidden]{display:none}#localName{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#localSeek{width:100%;margin:12px 0;accent-color:#5daaff}.local-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.local-controls span{font-variant-numeric:tabular-nums}.local-controls button{min-height:32px;padding:5px 10px}#localError{color:#ffafad}.load-summary{flex-wrap:wrap}.load-summary button{white-space:nowrap}</style>
   <style>.load-summary #videoSize{margin-left:auto}.recording-mode.small-video .player-card:not(:fullscreen) .player-wrap{width:min(100%,426.67px);margin-inline:auto}.record-controls label,.settings-common label{font-size:13px;white-space:nowrap}.settings-common{align-items:center;flex-wrap:wrap}</style>
   <style>@media (min-width:721px) and (hover:hover) and (pointer:fine){#freeBtn,#backBtn{display:none}}</style>
   <style>.ab-times div{display:flex;align-items:center;gap:4px}.ab-times b{margin:0}.ab-times button{margin:0}</style>
@@ -23,7 +24,7 @@
     </header>
 
     <section class="load-card" aria-label="영상 불러오기">
-      <div class="load-summary"><strong id="videoTitle">영상 준비 중</strong><button id="videoSize" type="button" hidden aria-pressed="false">영상 축소</button><button id="loadToggle" type="button" aria-expanded="true" aria-controls="loadDetails">영상 변경</button></div><div id="loadDetails"><label for="videoUrl">YouTube URL</label>
+      <div class="load-summary"><strong id="videoTitle">영상 준비 중</strong><button id="sourceYoutube" type="button" aria-pressed="true">YouTube</button><button id="sourceLocal" type="button" aria-pressed="false">로컬 음원</button><button id="videoSize" type="button" hidden aria-pressed="false">영상 축소</button><button id="loadToggle" type="button" aria-expanded="true" aria-controls="loadDetails">영상 변경</button></div><div id="loadDetails"><label for="videoUrl">YouTube URL</label>
       <div class="url-row"><input id="videoUrl" autocomplete="url" spellcheck="false" value="https://www.youtube.com/watch?v=8-Li_sFNc4Q" placeholder="YouTube 영상 URL"><button id="loadBtn" class="primary" type="button">영상 불러오기</button><div class="recent-wrap"><button id="recentBtn" type="button" aria-expanded="false">최근 영상</button><div id="recentMenu" class="recent-menu" hidden></div></div></div>
       <p class="hint" id="loadStatus">일반 YouTube URL과 youtu.be 단축 URL을 지원합니다.</p></div>
     </section>
@@ -31,6 +32,7 @@
     <section class="player-card" id="playerCard" tabindex="-1">
       <div class="video-title"><span id="playerStatus">YouTube API 연결 대기 중</span><span id="volumeStatus" aria-live="polite" hidden></span></div>
       <div class="player-wrap" id="playerWrap"><div id="player"></div><div id="fullscreenBadge" class="fullscreen-badge" aria-hidden="true"><span id="fullscreenRate">1.00×</span> <span id="fullscreenAb" hidden>AB</span> <span id="recordOsd" hidden></span></div><div id="fullscreenNotice" class="fullscreen-notice" aria-hidden="true" hidden></div></div>
+      <div id="localPlayer" hidden><strong id="localName">음원을 선택하세요</strong><input id="localSeek" type="range" min="0" max="1000" value="0" aria-label="음원 재생 위치"><div class="local-controls"><span id="localTime">0:00 / 0:00</span><label><input id="localLoop" type="checkbox"> 전체 반복</label><button id="localChange" type="button">음원 변경</button></div><input id="localFile" type="file" accept=".mp3,.wav,audio/mpeg,audio/wav,audio/x-wav" hidden><span id="localError" role="status"></span></div>
       <div class="mode-row"><span id="modeStatus" hidden></span><span id="abStatus" role="status"></span></div>
       <div class="transport">
         <button id="playBtn" class="primary" type="button">재생</button><button id="freeBtn" type="button">자유재생</button><button id="backBtn" type="button">A로 이동</button>
@@ -58,7 +60,8 @@
     </section>
   </main>
   <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="app.js?v=6"></script>
+  <script src="playback-adapters.js"></script>
+  <script src="app.js?v=7"></script>
   <script src="recorder.js?v=4"></script>
 </body>
 </html>
